@@ -1,0 +1,24 @@
+.form-group {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 16px;
+}
+.form-group__label {
+  font-weight: bold;
+}
+.invalid input {
+  border: 1px solid red;
+}
+.invalid :focus-visible {
+  outline: 2px solid crimson;
+}
+form {
+  padding: 30px;
+}
+
+label input {
+  padding: 5px;
+  border-radius: 5px;
+  border-color: black;
+  border-width: 1px;
+}
