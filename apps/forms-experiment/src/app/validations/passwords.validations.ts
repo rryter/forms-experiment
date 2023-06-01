@@ -7,11 +7,12 @@ export function passwordValidations(
     test(`${field}.password`, 'Password is required', () => {
       enforce(model.password).isNotBlank();
     });
-    test(`${field}.password`, 'Passwords should match', () => {
-      enforce(model.password).equals(model.confirmPassword);
-    });
+
     test(`${field}.password`, 'Should be more than 5 characters', () => {
       enforce(model.password).longerThan(5);
     });
+  });
+  test(`${field}.password`, 'Passwords should match', () => {
+    enforce(model.password).equals(model.confirmPassword);
   });
 }

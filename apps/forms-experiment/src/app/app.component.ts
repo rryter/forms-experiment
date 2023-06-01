@@ -1,22 +1,7 @@
 import { CommonModule } from '@angular/common';
-import {
-  AfterViewInit,
-  Component,
-  computed,
-  Signal,
-  ViewChild,
-} from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import {
-  BehaviorSubject,
-  delay,
-  filter,
-  map,
-  Observable,
-  of,
-  switchMap,
-} from 'rxjs';
+import { BehaviorSubject, delay, filter, map, of, switchMap } from 'rxjs';
 import 'zone.js/dist/zone';
 import { AddressComponent } from './address/address.component';
 import { ObservableState } from './observable-state';
@@ -62,6 +47,7 @@ export class AppComponent
 {
   public readonly suite = userValidations;
   private readonly userId$ = new BehaviorSubject('1');
+
   @ViewChild('form') ngForm!: NgForm;
 
   public submit(): void {
@@ -70,7 +56,19 @@ export class AppComponent
       console.log(this.ngForm);
     }
   }
-  public readonly vm: Signal<ViewModel>;
+
+  public readonly vm$ = this.onlySelectWhen(['user', 'valid']).pipe(
+    map((state) => {
+      return {
+        user: state.user,
+        dirty: state.dirty,
+        valid: state.valid,
+        zipCodes: state.zipCodes,
+        passwordDisabled: state.user.firstName === '',
+        showZipCode: state.user.address.city !== '',
+      };
+    })
+  );
 
   constructor() {
     super();
@@ -83,40 +81,34 @@ export class AppComponent
       country: '',
       zipCodes: [],
     });
-    const state = toSignal(this.state$, { initialValue: this.snapshot });
-    this.vm = computed(() => {
-      const { user, dirty, valid, zipCodes } = state();
-      return {
-        user,
-        dirty,
-        valid,
-        zipCodes,
-        passwordDisabled: user.firstName === '',
-        showZipCode: user.address.city !== '',
-      };
-    });
+  }
+
+  public loadUser() {
     this.connect({
       loadedUser: this.userId$.pipe(
-        switchMap((userId) => this.fetchUser(userId))
+        switchMap(() =>
+          of(
+            new User({
+              firstName: 'Reto',
+              lastName: 'Ryter',
+              address: {
+                country: 'Switzerland',
+                city: 'Konolfingen',
+                number: '',
+                street: 'Schwalbenweg 3',
+                zipcode: '1234',
+              },
+              passwords: {
+                password: '',
+                confirmPassword: '',
+              },
+            })
+          ).pipe(delay(1000))
+        )
       ),
     });
   }
 
-  private fetchUser(userId: string): Observable<User> {
-    return of(
-      new User({
-        firstName: 'Reto',
-        lastName: 'Ryter',
-        address: {
-          country: 'Switzerland',
-          city: 'Konolfingen',
-          number: '',
-          street: 'Schwalbenweg 3',
-          zipcode: '',
-        },
-      })
-    ).pipe(delay(1000));
-  }
   public ngAfterViewInit(): void {
     this.select('loadedUser').subscribe((v) => this.ngForm.reset(v));
     this.connect({
@@ -128,16 +120,14 @@ export class AppComponent
       user: this.ngForm.valueChanges?.pipe(
         map((v) => new User({ ...this.snapshot.user, ...v }))
       ),
-      dirty: this.ngForm.statusChanges?.pipe(
-        map(() => this.ngForm.dirty || false)
-      ),
-      valid: this.ngForm.statusChanges?.pipe(
-        map(() => this.ngForm.valid || false)
-      ),
     });
   }
 
   public reset(): void {
     this.ngForm.reset(new User({ ...this.snapshot.loadedUser }));
+  }
+
+  public resetEmpty(): void {
+    this.ngForm.reset(new User());
   }
 }

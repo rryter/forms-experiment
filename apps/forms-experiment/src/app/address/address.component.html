@@ -1,4 +1,4 @@
-<div ngModelGroup="address">
+<fieldset ngModelGroup="address">
   <h3>Address</h3>
   <div inputWrapper>
     <label class="form-group">
@@ -12,7 +12,7 @@
       <input type="text" [ngModel]="city" name="city" />
     </label>
   </div>
-  <div inputWrapper *ngIf="showZipCode">
+  <div inputWrapper>
     <label class="form-group">
       <span class="form-group__label">Zipcode</span>
       <input type="text" [ngModel]="zipcode" name="zipcode" />
@@ -30,4 +30,4 @@
       <input type="text" [ngModel]="country" name="country" />
     </label>
   </div>
-</div>
+</fieldset>

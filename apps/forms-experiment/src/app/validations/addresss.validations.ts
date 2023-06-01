@@ -1,4 +1,4 @@
-import { enforce, test } from 'vest';
+import { enforce, omitWhen, test } from 'vest';
 import { Address } from '../types/address';
 
 export function addressValidations(model: Address, field: string): void {
@@ -10,7 +10,13 @@ export function addressValidations(model: Address, field: string): void {
     enforce(model.zipcode).isNotBlank();
   });
 
-  test(`${field}.zipcode`, 'ZipCode is 4 digits long', () => {
-    enforce(model.zipcode).lengthEquals(4);
+  omitWhen(!model.zipcode, () => {
+    test(
+      `${field}.zipcode`,
+      `ZipCode should be 4 digits long, currently ${model.zipcode?.length}`,
+      () => {
+        enforce(model.zipcode).lengthEquals(4);
+      }
+    );
   });
 }

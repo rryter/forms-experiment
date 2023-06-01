@@ -53,9 +53,11 @@ export function createValidator<T>(
   return (control: AbstractControl) => {
     const mod: T = { ...model };
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     set<any>(mod, field, control.value); // Update the property with path
     const result = suite(mod, field);
     const errors = result.getErrors()[field];
+    const warnings = result.getWarnings()[field];
     return errors ? { error: errors[0], errors } : null;
   };
 }

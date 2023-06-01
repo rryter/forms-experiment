@@ -8,7 +8,24 @@ import { FormDirective } from '../form.directive';
   standalone: true,
   imports: [CommonModule],
   template: `
+    <small class="">
+      <ng-container *ngIf="ngModel.valid; else invalid">
+        <span class="badge text-bg-success">Valid</span>&nbsp;
+      </ng-container>
+      <ng-template #invalid>
+        <span class="badge text-bg-danger">Invalid</span>&nbsp;
+      </ng-template>
+      <ng-container *ngIf="ngModel.dirty; else clean">
+        <span class="badge text-bg-warning">dirty</span>&nbsp;
+      </ng-container>
+      <ng-template #clean>
+        <span class="badge text-bg-info">clean</span>&nbsp;
+      </ng-template>
+    </small>
     <ng-content></ng-content>
+    <!-- <ng-container *ngIf="ngModel.control.errors">
+      {{ ngModel.control.errors['warnings'] | json }}
+    </ng-container> -->
     <div
       class="alert alert-danger"
       role="alert"
@@ -40,6 +57,7 @@ import { FormDirective } from '../form.directive';
 })
 export class InputWrapperComponent {
   @ContentChild(NgModel) public ngModel!: NgModel;
+
   public readonly form = inject(FormDirective);
   public readonly ngModelGroup: NgModelGroup | null = inject(NgModelGroup, {
     optional: true,
@@ -53,6 +71,7 @@ export class InputWrapperComponent {
     ) {
       return true;
     }
+
     if (
       this.ngModelGroup?.control?.errors &&
       (this.form.ngForm.submitted ||
@@ -61,6 +80,7 @@ export class InputWrapperComponent {
     ) {
       return true;
     }
+
     return false;
   }
 }

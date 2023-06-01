@@ -23,7 +23,7 @@ export class FormModelGroupDirective<T> implements OnDestroy {
           const { suite } = this.formDirective;
 
           if (!formGroup) {
-            throw Error('Formgroup');
+            throw Error('FormGroup not set');
           }
 
           const field = getGroupInPath(
@@ -31,16 +31,16 @@ export class FormModelGroupDirective<T> implements OnDestroy {
             this.ngModelGroup.name,
             formGroup
           );
+
           const validatorFn = createValidator(
             field,
             this.formDirective.model,
             suite
           );
-          if (formGroup) {
-            formGroup.clearValidators();
-            formGroup.addValidators(validatorFn);
-            formGroup.updateValueAndValidity();
-          }
+
+          formGroup.clearValidators();
+          formGroup.addValidators(validatorFn);
+          formGroup.updateValueAndValidity();
         }
       });
   }

@@ -1,6 +1,6 @@
 import { Directive, inject, OnDestroy } from '@angular/core';
 import { NgModel } from '@angular/forms';
-import { distinctUntilChanged, Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { FormDirective } from './form.directive';
 import { createValidator, getControlPath } from './utils';
 
@@ -14,8 +14,8 @@ export class FormModelDirective<T> implements OnDestroy {
 
   constructor(private formDirective: FormDirective<any>) {
     this.formDirective.formChanges$
-      .pipe(takeUntil(this.destroy$$), distinctUntilChanged())
-      .subscribe((a: any) => {
+      .pipe(takeUntil(this.destroy$$))
+      .subscribe(() => {
         const { suite } = this.formDirective;
         const field = getControlPath(
           this.formDirective.ngForm.control,
