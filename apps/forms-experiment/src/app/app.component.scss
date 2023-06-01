@@ -8,6 +8,13 @@
 }
 .invalid {
   input {
-    border: 1px solid red;
+    border: 1px solid var(--bs-danger);
   }
+}
+
+.active td {
+  background: var(--bs-success-bg-subtle);
+}
+.inactive {
+  opacity: 0.4;
 }

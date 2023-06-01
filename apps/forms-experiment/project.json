@@ -19,7 +19,7 @@
           "apps/forms-experiment/src/favicon.ico",
           "apps/forms-experiment/src/assets"
         ],
-        "styles": ["apps/forms-experiment/src/styles.css"],
+        "styles": ["apps/forms-experiment/src/styles.scss"],
         "scripts": []
       },
       "configurations": {

@@ -39,7 +39,7 @@ type ViewModel = Pick<State, 'user' | 'valid' | 'dirty' | 'zipCodes'> & {
     FormsModule,
   ],
   templateUrl: './app.component.html',
-  styleUrls: ['./main.scss'],
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent
   extends ObservableState<State>
@@ -124,10 +124,10 @@ export class AppComponent
   }
 
   public reset(): void {
-    this.ngForm.reset(new User({ ...this.snapshot.loadedUser }));
+    this.ngForm.resetForm(new User({ ...this.snapshot.loadedUser }));
   }
 
   public resetEmpty(): void {
-    this.ngForm.reset(new User());
+    this.ngForm.resetForm(new User());
   }
 }
