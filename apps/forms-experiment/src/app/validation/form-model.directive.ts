@@ -1,6 +1,10 @@
-import { Directive, inject, OnDestroy } from '@angular/core';
-import { NgModel } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Directive, inject } from '@angular/core';
+import {
+  AbstractControl,
+  NG_VALIDATORS,
+  ValidationErrors,
+  Validator,
+} from '@angular/forms';
 import { FormDirective } from './form.directive';
 import { createValidator, getControlPath } from './utils';
 
@@ -9,35 +13,30 @@ import { createValidator, getControlPath } from './utils';
  * update and execute the validations
  */
 @Directive({
+  // eslint-disable-next-line @angular-eslint/directive-selector
   selector: '[ngModel]',
+  providers: [
+    { provide: NG_VALIDATORS, useExisting: FormModelDirective, multi: true },
+  ],
   standalone: true,
 })
-export class FormModelDirective<T> implements OnDestroy {
-  private readonly destroy$$ = new Subject<void>();
-
-  private readonly ngModel = inject(NgModel, { self: true });
+export class FormModelDirective implements Validator {
   private readonly formDirective = inject(FormDirective);
 
-  constructor() {
-    this.formDirective.formChanges$
-      .pipe(takeUntil(this.destroy$$))
-      .subscribe(() => {
-        // get the needed objects from the form tag
-        const { validations, ngForm, formData } = this.formDirective;
+  public validate(control: AbstractControl): ValidationErrors | null {
+    const formGroup = control.parent?.controls;
+    if (!formGroup) {
+      throw Error('formGroup is not set');
+    }
 
-        const { name, control } = this.ngModel;
-        // determine the path to the field, eg: user.name
-        const fieldPath = getControlPath(ngForm.control, name, control);
+    const { ngForm, validations, formData } = this.formDirective;
+    const controlName =
+      Object.keys(formGroup).find(
+        (name: string) => control === control.parent?.get(name)
+      ) || '';
+    const fieldPath = getControlPath(ngForm.control, controlName, control);
+    const validatorFn = createValidator(fieldPath, formData, validations);
 
-        const validatorFn = createValidator(fieldPath, formData, validations);
-
-        control.clearValidators();
-        control.addValidators(validatorFn);
-        control.updateValueAndValidity();
-      });
-  }
-
-  public ngOnDestroy(): void {
-    this.destroy$$.next();
+    return validatorFn(control);
   }
 }

@@ -1,5 +1,11 @@
 import { ContentChild, Directive, inject, OnDestroy } from '@angular/core';
-import { NgModel, NgModelGroup } from '@angular/forms';
+import {
+  AbstractControl,
+  NgModel,
+  NgModelGroup,
+  ValidationErrors,
+  Validator,
+} from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { FormDirective } from './form.directive';
 import { createValidator, getGroupInPath } from './utils';
@@ -8,37 +14,48 @@ import { createValidator, getGroupInPath } from './utils';
   selector: '[ngModelGroup]',
   standalone: true,
 })
-export class FormModelGroupDirective<T> implements OnDestroy {
-  private readonly destroy$$ = new Subject<void>();
+export class FormModelGroupDirective<T> implements Validator {
   private readonly formDirective = inject(FormDirective);
-  private readonly ngModelGroup = inject(NgModelGroup, { self: true });
   @ContentChild(NgModel) child!: NgModel;
 
-  constructor() {
-    this.formDirective.formChanges$
-      .pipe(takeUntil(this.destroy$$))
-      .subscribe(() => {
-        const { name } = this.ngModelGroup;
-        if (name && this.child) {
-          const formGroup = this.child.control.parent;
+  // constructor() {
+  //   this.formDirective.formChanges$
+  //     .pipe(takeUntil(this.destroy$$))
+  //     .subscribe(() => {
+  //       const { name } = this.ngModelGroup;
+  //       if (name && this.child) {
+  //         const formGroup = this.child.control.parent;
 
-          if (!formGroup) {
-            throw Error('Formgroup');
-          }
+  //         if (!formGroup) {
+  //           throw Error('Formgroup');
+  //         }
 
-          const { validations, ngForm, formData } = this.formDirective;
-          const field = getGroupInPath(ngForm.control, name, formGroup);
-          const validatorFn = createValidator(field, formData, validations);
-          if (formGroup) {
-            formGroup.clearValidators();
-            formGroup.addValidators(validatorFn);
-            formGroup.updateValueAndValidity();
-          }
-        }
-      });
-  }
+  //         const { validations, ngForm, formData } = this.formDirective;
+  //         const field = getGroupInPath(ngForm.control, name, formGroup);
+  //         const validatorFn = createValidator(field, formData, validations);
+  //         if (formGroup) {
+  //           formGroup.clearValidators();
+  //           formGroup.addValidators(validatorFn);
+  //           formGroup.updateValueAndValidity();
+  //         }
+  //       }
+  //     });
+  // }
 
-  public ngOnDestroy(): void {
-    this.destroy$$.next();
+  public validate(control: AbstractControl): ValidationErrors | null {
+    const formGroup = control.parent?.controls;
+    if (!formGroup) {
+      throw Error('formGroup is not set');
+    }
+
+    const { ngForm, validations, formData } = this.formDirective;
+    const controlName =
+      Object.keys(formGroup).find(
+        (name: string) => control === control.parent?.get(name)
+      ) || '';
+    const field = getGroupInPath(ngForm.control, controlName, control);
+    const validatorFn = createValidator(field, formData, validations);
+
+    return validatorFn(control);
   }
 }

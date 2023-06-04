@@ -1,26 +1,19 @@
-import { Directive, inject, Input, OnChanges } from '@angular/core';
+import { Directive, inject, Input } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { ZodObject } from 'zod';
+import { ZodAny, ZodObject, ZodRawShape, ZodUnknown } from 'zod';
 
 /**
  * Fundamental building block for TDRF (Template Driven Reactive Forms).
  */
 @Directive({
-  selector: 'form[formData]',
+  selector: 'form[formData][validations]',
   standalone: true,
 })
-export class FormDirective<T> implements OnChanges {
-  private readonly formChanges$$ = new Subject<void>();
-  public readonly formChanges$ = this.formChanges$$.asObservable();
-
+export class FormDirective<T> {
   @Input() public formData!: T;
-  @Input() public validations!: ZodObject<any>;
+  @Input() public validations!: ZodObject<ZodRawShape>;
 
   // How does this work?
   public readonly ngForm = inject(NgForm, { self: true });
-
-  public ngOnChanges(): void {
-    this.formChanges$$.next();
-  }
 }
