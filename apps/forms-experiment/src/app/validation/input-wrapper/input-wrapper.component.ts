@@ -3,6 +3,10 @@ import { Component, ContentChild, HostBinding, inject } from '@angular/core';
 import { NgModel, NgModelGroup } from '@angular/forms';
 import { FormDirective } from '../form.directive';
 
+/**
+ * Provides the HTML and logic for displaying validation errors for each field.
+ * TBD: find a way to show the validation errors for conditional validation:
+ */
 @Component({
   selector: '[inputWrapper]',
   standalone: true,
@@ -23,15 +27,12 @@ import { FormDirective } from '../form.directive';
       </ng-template>
     </small>
     <ng-content></ng-content>
-    <!-- <ng-container *ngIf="ngModel.control.errors">
-      {{ ngModel.control.errors['warnings'] | json }}
-    </ng-container> -->
     <div
       class="alert alert-danger"
       role="alert"
       *ngIf="
         ngModel.control.errors &&
-        (form.ngForm.submitted || ngModel.touched || ngModel.dirty)
+        (formDirective.ngForm.submitted || ngModel.touched || ngModel.dirty)
       "
     >
       <ul>
@@ -42,7 +43,9 @@ import { FormDirective } from '../form.directive';
       <ng-container
         *ngIf="
           ngModelGroup &&
-          (form.ngForm.submitted || ngModelGroup.touched || ngModel.dirty)
+          (formDirective.ngForm.submitted ||
+            ngModelGroup.touched ||
+            ngModel.dirty)
         "
       >
         <ul *ngIf="ngModelGroup.control.errors">
@@ -58,7 +61,7 @@ import { FormDirective } from '../form.directive';
 export class InputWrapperComponent {
   @ContentChild(NgModel) public ngModel!: NgModel;
 
-  public readonly form = inject(FormDirective);
+  public readonly formDirective = inject(FormDirective);
   public readonly ngModelGroup: NgModelGroup | null = inject(NgModelGroup, {
     optional: true,
     self: true,
@@ -67,14 +70,16 @@ export class InputWrapperComponent {
   @HostBinding('class.invalid') public get invalid() {
     if (
       this.ngModel?.control?.errors &&
-      (this.form.ngForm.submitted || this.ngModel.touched || this.ngModel.dirty)
+      (this.formDirective.ngForm.submitted ||
+        this.ngModel.touched ||
+        this.ngModel.dirty)
     ) {
       return true;
     }
 
     if (
       this.ngModelGroup?.control?.errors &&
-      (this.form.ngForm.submitted ||
+      (this.formDirective.ngForm.submitted ||
         this.ngModelGroup.touched ||
         this.ngModel.dirty)
     ) {

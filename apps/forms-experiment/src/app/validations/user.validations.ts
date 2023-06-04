@@ -1,17 +1,9 @@
-import { create, enforce, only, test } from 'vest';
-import { User } from '../types/user';
-import { addressValidations } from './addresss.validations';
-import { passwordValidations } from './passwords.validations';
+import { z } from 'zod';
 
-export const userValidations = create((model: User, field: string) => {
-  only(field);
-
-  test('firstName', `First name is required`, () => {
-    enforce(model.firstName).isNotBlank();
-  });
-  test('lastName', `Last name is required`, () => {
-    enforce(model.lastName).isNotBlank();
-  });
-  passwordValidations(model.passwords, 'passwords');
-  addressValidations(model.address, 'address');
+export const UserForm = z.object({
+  firstName: z.string().nonempty(),
+  lastName: z.string().nonempty(),
+  country22: z.string().nonempty().min(10),
 });
+
+export type UserFormType = z.infer<typeof UserForm>;

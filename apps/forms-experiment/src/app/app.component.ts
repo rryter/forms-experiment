@@ -1,27 +1,27 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { BehaviorSubject, delay, filter, map, of, switchMap } from 'rxjs';
+import { BehaviorSubject, delay, map, of, switchMap } from 'rxjs';
 import 'zone.js/dist/zone';
 import { AddressComponent } from './address/address.component';
 import { ObservableState } from './observable-state';
+import { PasswordFormComponent } from './password-form/password-form.component';
+import { SelectComponent } from './select/select.component';
 import { User } from './types/user';
 import { FormModelGroupDirective } from './validation/form-model-group.directive';
 import { FormModelDirective } from './validation/form-model.directive';
 import { FormDirective } from './validation/form.directive';
 import { InputWrapperComponent } from './validation/input-wrapper/input-wrapper.component';
-import { userValidations } from './validations/user.validations';
+import { UserForm } from './validations/user.validations';
 
 type State = {
   user: User;
   loadedUser: User;
   valid: boolean;
   dirty: boolean;
-  country: string;
-  zipCodes: string[];
 };
 
-type ViewModel = Pick<State, 'user' | 'valid' | 'dirty' | 'zipCodes'> & {
+type ViewModel = Pick<State, 'user' | 'valid' | 'dirty'> & {
   passwordDisabled: boolean;
   showZipCode: boolean;
 };
@@ -36,6 +36,8 @@ type ViewModel = Pick<State, 'user' | 'valid' | 'dirty' | 'zipCodes'> & {
     FormDirective,
     InputWrapperComponent,
     AddressComponent,
+    SelectComponent,
+    PasswordFormComponent,
     FormsModule,
   ],
   templateUrl: './app.component.html',
@@ -45,13 +47,13 @@ export class AppComponent
   extends ObservableState<State>
   implements AfterViewInit
 {
-  public readonly suite = userValidations;
+  public readonly userValidations = UserForm;
   private readonly userId$ = new BehaviorSubject('1');
 
   @ViewChild('form') ngForm!: NgForm;
 
   public submit(): void {
-    console.log(this.ngForm.form.errors);
+    console.log(this.ngForm.form);
     if (this.ngForm.form.valid) {
       console.log(this.ngForm);
     }
@@ -63,7 +65,6 @@ export class AppComponent
         user: state.user,
         dirty: state.dirty,
         valid: state.valid,
-        zipCodes: state.zipCodes,
         passwordDisabled: state.user.firstName === '',
         showZipCode: state.user.address.city !== '',
       };
@@ -72,14 +73,12 @@ export class AppComponent
 
   constructor() {
     super();
-
+    console.log(UserForm);
     this.initialize({
       user: new User(),
       loadedUser: new User(),
       dirty: false,
       valid: false,
-      country: '',
-      zipCodes: [],
     });
   }
 
@@ -91,6 +90,7 @@ export class AppComponent
             new User({
               firstName: 'Reto',
               lastName: 'Ryter',
+              country22: 'Aasd',
               address: {
                 country: 'Switzerland',
                 city: 'Konolfingen',
@@ -112,11 +112,6 @@ export class AppComponent
   public ngAfterViewInit(): void {
     this.select('loadedUser').subscribe((v) => this.ngForm.reset(v));
     this.connect({
-      country: this.select('user').pipe(map((user) => user.address.country)),
-      zipCodes: this.select('country').pipe(
-        filter(Boolean),
-        switchMap(() => of(['9000', '9270']))
-      ),
       user: this.ngForm.valueChanges?.pipe(
         map((v) => new User({ ...this.snapshot.user, ...v }))
       ),

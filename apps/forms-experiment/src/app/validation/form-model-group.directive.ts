@@ -18,29 +18,22 @@ export class FormModelGroupDirective<T> implements OnDestroy {
     this.formDirective.formChanges$
       .pipe(takeUntil(this.destroy$$))
       .subscribe(() => {
-        if (this.ngModelGroup.name && this.child) {
+        const { name } = this.ngModelGroup;
+        if (name && this.child) {
           const formGroup = this.child.control.parent;
-          const { suite } = this.formDirective;
 
           if (!formGroup) {
-            throw Error('FormGroup not set');
+            throw Error('Formgroup');
           }
 
-          const field = getGroupInPath(
-            this.formDirective.ngForm.control,
-            this.ngModelGroup.name,
-            formGroup
-          );
-
-          const validatorFn = createValidator(
-            field,
-            this.formDirective.model,
-            suite
-          );
-
-          formGroup.clearValidators();
-          formGroup.addValidators(validatorFn);
-          formGroup.updateValueAndValidity();
+          const { validations, ngForm, formData } = this.formDirective;
+          const field = getGroupInPath(ngForm.control, name, formGroup);
+          const validatorFn = createValidator(field, formData, validations);
+          if (formGroup) {
+            formGroup.clearValidators();
+            formGroup.addValidators(validatorFn);
+            formGroup.updateValueAndValidity();
+          }
         }
       });
   }

@@ -1,6 +1,10 @@
-import { AbstractControl, FormGroup, ValidatorFn } from '@angular/forms';
+import {
+  AbstractControl,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+} from '@angular/forms';
 import { set } from 'lodash';
-import { SuiteResult } from 'vest';
 
 export function getControlPath(
   formGroup: FormGroup,
@@ -48,16 +52,19 @@ export function getGroupInPath(
 export function createValidator<T>(
   field: string,
   model: T,
-  suite: (model: T, field: string) => SuiteResult
+  suite: any
 ): ValidatorFn {
-  return (control: AbstractControl) => {
+  return (control: AbstractControl): ValidationErrors | null => {
     const mod: T = { ...model };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     set<any>(mod, field, control.value); // Update the property with path
-    const result = suite(mod, field);
-    const errors = result.getErrors()[field];
-    const warnings = result.getWarnings()[field];
-    return errors ? { error: errors[0], errors } : null;
+    const result = suite.safeParse(mod, field);
+    const errors = result.error?.issues
+      .filter((issue: any) => {
+        return issue.path.join('.') === field;
+      })
+      .map((issue: any) => issue.message);
+    return errors?.length > 0 ? { error: errors[0], errors } : null;
   };
 }

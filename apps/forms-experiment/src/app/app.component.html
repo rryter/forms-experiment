@@ -19,8 +19,8 @@
     <div class="col">
       <form
         style="position: relative"
-        [model]="vm.user"
-        [suite]="suite"
+        [formData]="vm.user"
+        [validations]="userValidations"
         #form="ngForm"
         (ngSubmit)="submit()"
       >
@@ -42,40 +42,17 @@
               <input type="text" [ngModel]="vm.user.lastName" name="lastName" />
             </label>
           </div>
+
+          <forms-experiment-select
+            [selectedValue]="vm.user.country22"
+          ></forms-experiment-select>
         </fieldset>
 
-        <app-address
-          [showZipCode]="vm.showZipCode"
-          [street]="vm.user.address.street"
-          [city]="vm.user.address.city"
-          [zipcode]="vm.user.address.zipcode"
-          [number]="vm.user.address.number"
-          [country]="vm.user.address.country"
-        >
-        </app-address>
+        <app-address [address]="vm.user.address"> </app-address>
 
-        <fieldset ngModelGroup="passwords" inputWrapper>
-          <h2>Password</h2>
-
-          <label class="form-group">
-            <span class="form-group__label">Password</span>
-            <input
-              type="password"
-              [disabled]="vm.passwordDisabled"
-              [ngModel]="vm.user.passwords.password"
-              name="password"
-            />
-          </label>
-          <label class="form-group">
-            <span class="form-group__label">Confirm password</span>
-            <input
-              type="password"
-              [disabled]="vm.passwordDisabled"
-              [ngModel]="vm.user.passwords.confirmPassword"
-              name="confirmPassword"
-            />
-          </label>
-        </fieldset>
+        <forms-experiment-password-form
+          [passwords]="vm.user.passwords"
+        ></forms-experiment-password-form>
 
         <button class="btn btn-light" type="button" (click)="reset()">
           reset
@@ -86,62 +63,41 @@
         </button>
         &nbsp;
         <button class="btn btn-primary">Submit form</button>
-        <!-- 
-    <pre>
-      {{ vm | json }}
-    </pre> -->
       </form>
     </div>
-    <div class="col">
-      <h3>Form Status</h3>
 
+    <div class="col">
       <div class="card">
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col">Property</th>
-              <th scope="col">Value</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr [class]="form.dirty ? 'active' : 'inactive'">
-              <td class="text-end">dirty</td>
-              <td>{{ form.dirty }}</td>
-            </tr>
-            <tr [class]="form.pristine ? 'active' : 'inactive'">
-              <td class="text-end">pristine</td>
-              <td>{{ form.pristine }}</td>
-            </tr>
-            <tr [class]="form.valid ? 'active' : 'inactive'">
-              <td class="text-end">valid</td>
-              <td>{{ form.valid }}</td>
-            </tr>
-            <tr [class]="form.disabled ? 'active' : 'inactive'">
-              <td class="text-end">disabled</td>
-              <td>{{ form.disabled }}</td>
-            </tr>
-            <tr [class]="form.enabled ? 'active' : 'inactive'">
-              <td class="text-end">enabled</td>
-              <td>{{ form.enabled }}</td>
-            </tr>
-            <tr [class]="form.invalid ? 'active' : 'inactive'">
-              <td class="text-end">invalid</td>
-              <td>{{ form.invalid }}</td>
-            </tr>
-            <tr [class]="form.pending ? 'active' : 'inactive'">
-              <td class="text-end">pending</td>
-              <td>{{ form.pending }}</td>
-            </tr>
-            <tr [class]="form.untouched ? 'active' : 'inactive'">
-              <td class="text-end">untouched</td>
-              <td>{{ form.untouched }}</td>
-            </tr>
-            <tr [class]="form.submitted ? 'active' : 'inactive'">
-              <td class="text-end">submitted</td>
-              <td>{{ form.submitted }}</td>
-            </tr>
-          </tbody>
-        </table>
+        <h3>Form Status</h3>
+        <div>
+          <span class="badge text-bg-primary" *ngIf="form.dirty"> dirty </span>
+          <span class="badge text-bg-primary" *ngIf="form.pristine">
+            pristine
+          </span>
+          <span class="badge text-bg-primary" *ngIf="form.valid"> valid </span>
+          <span class="badge text-bg-primary" *ngIf="form.disabled">
+            disabled
+          </span>
+
+          <span class="badge text-bg-primary" *ngIf="form.invalid">
+            invalid
+          </span>
+          <span class="badge text-bg-primary" *ngIf="form.pending">
+            pending
+          </span>
+          <span class="badge text-bg-primary" *ngIf="form.untouched">
+            untouched
+          </span>
+          <span class="badge text-bg-primary" *ngIf="form.submitted">
+            submitted
+          </span>
+          <span class="badge text-bg-primary" *ngIf="form.enabled">
+            enabled
+          </span>
+        </div>
+        <pre>
+          {{ form.value | json }}
+        </pre>
       </div>
       <hr />
       <h3>Load User</h3>
