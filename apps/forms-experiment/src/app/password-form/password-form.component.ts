@@ -11,7 +11,7 @@ import {
 } from '../validations/passwords.validations';
 
 @Component({
-  selector: 'forms-experiment-password-form',
+  selector: 'fe-password-form',
   standalone: true,
   imports: [
     CommonModule,

@@ -13,13 +13,12 @@ const Password = z
 
 export const PasswordForm = z
   .object({
-    password: Password,
-    confirmPassword: z.string().nonempty(),
+    password: Password.optional(),
+    confirmPassword: z.string().nonempty().optional(),
   })
   .refine(
     (data) => {
-      console.log(data);
-      return data.password === data.confirmPassword;
+      return data?.password === data?.confirmPassword;
     },
     {
       message: "Passwords don't match",

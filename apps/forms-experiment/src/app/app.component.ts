@@ -3,7 +3,7 @@ import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { BehaviorSubject, delay, map, of, switchMap } from 'rxjs';
 import 'zone.js/dist/zone';
-import { AddressComponent } from './address/address.component';
+import { AddressFormComponent } from './address/address.component';
 import { ObservableState } from './observable-state';
 import { PasswordFormComponent } from './password-form/password-form.component';
 import { SelectComponent } from './select/select.component';
@@ -27,7 +27,7 @@ type ViewModel = Pick<State, 'user' | 'valid' | 'dirty'> & {
 };
 
 @Component({
-  selector: 'forms-experiment-app',
+  selector: 'fe-app',
   standalone: true,
   imports: [
     CommonModule,
@@ -35,7 +35,7 @@ type ViewModel = Pick<State, 'user' | 'valid' | 'dirty'> & {
     FormModelGroupDirective,
     FormDirective,
     InputWrapperComponent,
-    AddressComponent,
+    AddressFormComponent,
     SelectComponent,
     PasswordFormComponent,
     FormsModule,
@@ -73,7 +73,6 @@ export class AppComponent
 
   constructor() {
     super();
-    console.log(UserForm);
     this.initialize({
       user: new User(),
       loadedUser: new User(),
@@ -97,6 +96,13 @@ export class AppComponent
                 number: '',
                 street: 'Schwalbenweg 3',
                 zipcode: '1234',
+              },
+              companyAddress: {
+                country: 'Switzerland2',
+                city: 'Konolfingen2',
+                number: '',
+                street: 'Schwalbenweg 2',
+                zipcode: '2222',
               },
               passwords: {
                 password: '',

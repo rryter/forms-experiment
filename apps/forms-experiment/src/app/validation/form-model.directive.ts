@@ -26,7 +26,7 @@ export class FormModelDirective implements Validator {
   public validate(control: AbstractControl): ValidationErrors | null {
     const formGroup = control.parent?.controls;
     if (!formGroup) {
-      throw Error('formGroup is not set');
+      throw new Error('formGroup is not set');
     }
 
     const { ngForm, validations, formData } = this.formDirective;

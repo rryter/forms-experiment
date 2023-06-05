@@ -77,7 +77,7 @@ const states = [
   'Wyoming',
 ];
 @Component({
-  selector: 'app-address',
+  selector: 'fe-address-form',
   standalone: true,
   imports: [
     NgFor,
@@ -92,14 +92,15 @@ const states = [
   templateUrl: './address.component.html',
   styleUrls: ['./address.component.scss'],
 })
-export class AddressComponent implements AfterViewInit {
+export class AddressFormComponent implements AfterViewInit {
   @Input() public address = new Address();
+  @Input() public name = 'address';
 
   constructor(private formDirective: FormDirective<any>) {}
 
   ngAfterViewInit(): void {
     this.formDirective.validations = this.formDirective.validations.extend({
-      address: AddressForm,
+      [this.name]: AddressForm,
     });
   }
 

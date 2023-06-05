@@ -1,12 +1,22 @@
 <ng-container *ngIf="vm$ | async as vm">
   <div class="jumbotron">
     <h1 class="display-4">TDRF!</h1>
-    <p class="lead">Template Driven Reactive Forms.</p>
-    <hr class="my-4" />
+    <p class="lead">Template Driven Reactive Forms</p>
+
     <p>
-      This is a demo page, to illustrate the concept of using the best of both
-      worlds, template driven and reactive forms.
+      This is a demo page, to illustrate the concept of
+      <a
+        href="https://blog.simplified.courses/say-goodbye-to-custom-form-validators-in-angular/"
+        >template driven, reactive forms</a
+      >
+      by
+      <a href="https://www.simplified.courses/about" target="_blank"
+        >Brecht Billiet</a
+      >.<br />This example uses
+      <a href="https://zod.dev/" target="_blank">Zod</a> for form validations
+      instead of <a href="https://vestjs.dev/" target="_blank">Vest</a>.
     </p>
+    <hr class="my-4" />
   </div>
 
   <div class="row">
@@ -43,16 +53,13 @@
             </label>
           </div>
 
-          <forms-experiment-select
-            [selectedValue]="vm.user.country22"
-          ></forms-experiment-select>
+          <!-- <fe-select [selectedValue]="vm.user.country22"></fe-select> -->
         </fieldset>
 
-        <app-address [address]="vm.user.address"> </app-address>
-
-        <forms-experiment-password-form
-          [passwords]="vm.user.passwords"
-        ></forms-experiment-password-form>
+        <fe-address-form [address]="vm.user.address"> </fe-address-form>
+        <fe-address-form [address]="vm.user.address" name="companyAddress">
+        </fe-address-form>
+        <!-- <fe-password-form [passwords]="vm.user.passwords"></fe-password-form> -->
 
         <button class="btn btn-light" type="button" (click)="reset()">
           reset

@@ -5,6 +5,7 @@ import {
   ValidatorFn,
 } from '@angular/forms';
 import { set } from 'lodash';
+import { ZodAny, ZodObject, ZodRawShape } from 'zod';
 
 export function getControlPath(
   formGroup: FormGroup,
@@ -52,15 +53,20 @@ export function getGroupInPath(
 export function createValidator<T>(
   field: string,
   model: T,
-  suite: any
+  validations: ZodObject<ZodRawShape>
 ): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const mod: T = { ...model };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     set<any>(mod, field, control.value); // Update the property with path
-    const result = suite.safeParse(mod, field);
-    const errors = result.error?.issues
+
+    const result = validations.safeParse(mod);
+    if (result.success === true) {
+      return null;
+    }
+
+    const errors = result.error.issues
       .filter((issue: any) => {
         return issue.path.join('.') === field;
       })

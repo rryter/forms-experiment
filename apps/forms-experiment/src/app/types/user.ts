@@ -18,6 +18,14 @@ export class User {
     country: '',
   };
 
+  companyAddress: Address = {
+    street: '',
+    number: '',
+    city: '',
+    zipcode: '',
+    country: '',
+  };
+
   isCompany = false;
 
   constructor(user?: Partial<User>) {

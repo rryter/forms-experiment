@@ -7,14 +7,13 @@ import { FormDirective } from '../validation/form.directive';
 import { InputWrapperComponent } from '../validation/input-wrapper/input-wrapper.component';
 
 @Component({
-  selector: 'forms-experiment-select',
+  selector: 'fe-select',
   standalone: true,
   imports: [
     CommonModule,
     FormsModule,
     NgForOf,
     InputWrapperComponent,
-    FormDirective,
     FormModelDirective,
     FormModelGroupDirective,
   ],
