@@ -13,8 +13,8 @@ const Password = z
 
 export const PasswordForm = z
   .object({
-    password: Password.optional(),
-    confirmPassword: z.string().nonempty().optional(),
+    password: Password,
+    confirmPassword: z.string().nonempty(),
   })
   .refine(
     (data) => {

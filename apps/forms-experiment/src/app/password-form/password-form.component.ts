@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, Input } from '@angular/core';
 import { ControlContainer, FormsModule, NgForm } from '@angular/forms';
+import { ZodObject, ZodRawShape } from 'zod';
+import { FormFieldErrorComponent } from '../validation/form-field-error/form-field-error.component';
 import { FormModelGroupDirective } from '../validation/form-model-group.directive';
 import { FormModelDirective } from '../validation/form-model.directive';
 import { FormDirective } from '../validation/form.directive';
-import { InputWrapperComponent } from '../validation/input-wrapper/input-wrapper.component';
 import {
   PasswordForm,
   PasswordFormType,
@@ -18,23 +19,27 @@ import {
     FormsModule,
     FormModelDirective,
     FormModelGroupDirective,
-    InputWrapperComponent,
+    FormFieldErrorComponent,
   ],
   viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
   templateUrl: './password-form.component.html',
   styleUrls: ['./password-form.component.scss'],
 })
 export class PasswordFormComponent implements AfterViewInit {
-  @Input() useDefaultValidations = true;
+  /**
+   * You can pass in custom validations as a way of overriding the default password validation
+   */
+  @Input() validations: ZodObject<ZodRawShape> | null = null;
+
   @Input({ required: true }) passwords: PasswordFormType = {
     password: '',
     confirmPassword: '',
   };
 
-  constructor(private formDirective: FormDirective<any>) {}
+  constructor(private formDirective: FormDirective) {}
 
   ngAfterViewInit(): void {
-    if (this.useDefaultValidations) {
+    if (!this.validations) {
       const { validations } = this.formDirective;
       this.formDirective.validations = validations.extend({
         passwords: PasswordForm,

@@ -35,7 +35,7 @@
         (ngSubmit)="submit()"
       >
         <fieldset>
-          <div inputWrapper>
+          <div formFieldError>
             <label class="form-group">
               <span class="form-group__label">First name</span>
               <input
@@ -46,7 +46,7 @@
             </label>
           </div>
 
-          <div inputWrapper>
+          <div formFieldError>
             <label class="form-group">
               <span class="form-group__label">Last name</span>
               <input type="text" [ngModel]="vm.user.lastName" name="lastName" />
@@ -57,9 +57,7 @@
         </fieldset>
 
         <fe-address-form [address]="vm.user.address"> </fe-address-form>
-        <fe-address-form [address]="vm.user.address" name="companyAddress">
-        </fe-address-form>
-        <!-- <fe-password-form [passwords]="vm.user.passwords"></fe-password-form> -->
+        <fe-password-form [passwords]="vm.user.passwords"></fe-password-form>
 
         <button class="btn btn-light" type="button" (click)="reset()">
           reset

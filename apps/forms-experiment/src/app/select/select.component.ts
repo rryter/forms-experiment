@@ -1,10 +1,9 @@
 import { CommonModule, NgForOf } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { ControlContainer, FormsModule, NgForm } from '@angular/forms';
+import { FormFieldErrorComponent } from '../validation/form-field-error/form-field-error.component';
 import { FormModelGroupDirective } from '../validation/form-model-group.directive';
 import { FormModelDirective } from '../validation/form-model.directive';
-import { FormDirective } from '../validation/form.directive';
-import { InputWrapperComponent } from '../validation/input-wrapper/input-wrapper.component';
 
 @Component({
   selector: 'fe-select',
@@ -13,13 +12,13 @@ import { InputWrapperComponent } from '../validation/input-wrapper/input-wrapper
     CommonModule,
     FormsModule,
     NgForOf,
-    InputWrapperComponent,
+    FormFieldErrorComponent,
     FormModelDirective,
     FormModelGroupDirective,
   ],
   viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
   template: `
-    <div inputWrapper>
+    <div formFieldError>
       <label class="form-group">
         <span class="form-group__label">Country22</span>
         <input type="text" [ngModel]="selectedValue" name="country22" />

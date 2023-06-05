@@ -6,7 +6,7 @@ import {
   Validator,
 } from '@angular/forms';
 import { FormDirective } from './form.directive';
-import { createValidator, getControlPath } from './utils';
+import { createValidator, getControlPath } from './form.utils';
 
 /**
  * For each input with [ngModel], everytime the form changes,

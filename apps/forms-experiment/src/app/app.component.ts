@@ -8,10 +8,10 @@ import { ObservableState } from './observable-state';
 import { PasswordFormComponent } from './password-form/password-form.component';
 import { SelectComponent } from './select/select.component';
 import { User } from './types/user';
+import { FormFieldErrorComponent } from './validation/form-field-error/form-field-error.component';
 import { FormModelGroupDirective } from './validation/form-model-group.directive';
 import { FormModelDirective } from './validation/form-model.directive';
 import { FormDirective } from './validation/form.directive';
-import { InputWrapperComponent } from './validation/input-wrapper/input-wrapper.component';
 import { UserForm } from './validations/user.validations';
 
 type State = {
@@ -34,7 +34,7 @@ type ViewModel = Pick<State, 'user' | 'valid' | 'dirty'> & {
     FormModelDirective,
     FormModelGroupDirective,
     FormDirective,
-    InputWrapperComponent,
+    FormFieldErrorComponent,
     AddressFormComponent,
     SelectComponent,
     PasswordFormComponent,

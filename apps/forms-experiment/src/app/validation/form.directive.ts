@@ -1,7 +1,6 @@
 import { Directive, inject, Input } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Subject } from 'rxjs';
-import { ZodAny, ZodObject, ZodRawShape, ZodUnknown } from 'zod';
+import { ZodObject, ZodRawShape } from 'zod';
 
 /**
  * Fundamental building block for TDRF (Template Driven Reactive Forms).
@@ -10,7 +9,7 @@ import { ZodAny, ZodObject, ZodRawShape, ZodUnknown } from 'zod';
   selector: 'form[formData][validations]',
   standalone: true,
 })
-export class FormDirective<T> {
+export class FormDirective<T = unknown> {
   @Input() public formData!: T;
   @Input() public validations!: ZodObject<ZodRawShape>;
 

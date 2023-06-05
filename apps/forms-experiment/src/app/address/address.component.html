@@ -1,35 +1,30 @@
 <fieldset [ngModelGroup]="name">
   <h3>Address</h3>
-  <div inputWrapper>
+  <div formFieldError>
     <label class="form-group">
       <span class="form-group__label">Street</span>
       <input type="text" [ngModel]="address.street" name="street" />
     </label>
   </div>
-  <div inputWrapper>
+  <div formFieldError>
     <label class="form-group">
       <span class="form-group__label">City</span>
       <input type="text" [ngModel]="address.city" name="city" />
     </label>
   </div>
-  <div inputWrapper>
+  <div formFieldError>
     <label class="form-group">
       <span class="form-group__label">Zipcode</span>
       <input type="text" [ngModel]="address.zipcode" name="zipcode" />
     </label>
   </div>
-  <div inputWrapper>
+  <div formFieldError>
     <label class="form-group">
       <span class="form-group__label">Number</span>
-      <input
-        type="text"
-        [ngModel]="address.number"
-        name="number"
-        [ngbTypeahead]="search"
-      />
+      <input type="text" [ngModel]="address.number" name="number" />
     </label>
   </div>
-  <div inputWrapper>
+  <div formFieldError>
     <label class="form-group">
       <span class="form-group__label">Country</span>
       <input type="text" [ngModel]="address.country" name="country" />
