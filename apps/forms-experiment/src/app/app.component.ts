@@ -4,14 +4,16 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { BehaviorSubject, delay, map, of, switchMap } from 'rxjs';
 import 'zone.js/dist/zone';
 import { AddressFormComponent } from './address/address.component';
+import {
+  FormDirective,
+  FormFieldErrorComponent,
+  FormModelDirective,
+  FormModelGroupDirective,
+} from './form-validation';
 import { ObservableState } from './observable-state';
 import { PasswordFormComponent } from './password-form/password-form.component';
 import { SelectComponent } from './select/select.component';
 import { User } from './types/user';
-import { FormFieldErrorComponent } from './validation/form-field-error/form-field-error.component';
-import { FormModelGroupDirective } from './validation/form-model-group.directive';
-import { FormModelDirective } from './validation/form-model.directive';
-import { FormDirective } from './validation/form.directive';
 import { UserForm } from './validations/user.validations';
 
 type State = {

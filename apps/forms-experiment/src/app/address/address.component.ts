@@ -2,11 +2,14 @@ import { NgFor, NgIf } from '@angular/common';
 import { AfterViewInit, Component, Input } from '@angular/core';
 import { ControlContainer, FormsModule, NgForm } from '@angular/forms';
 import { NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
+
+import {
+  FormDirective,
+  FormFieldErrorComponent,
+  FormModelDirective,
+  FormModelGroupDirective,
+} from '../form-validation';
 import { Address } from '../types/address';
-import { FormFieldErrorComponent } from '../validation/form-field-error/form-field-error.component';
-import { FormModelGroupDirective } from '../validation/form-model-group.directive';
-import { FormModelDirective } from '../validation/form-model.directive';
-import { FormDirective } from '../validation/form.directive';
 import { AddressForm } from '../validations/addresss.validations';
 
 @Component({

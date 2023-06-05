@@ -2,10 +2,13 @@ import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, Input } from '@angular/core';
 import { ControlContainer, FormsModule, NgForm } from '@angular/forms';
 import { ZodObject, ZodRawShape } from 'zod';
-import { FormFieldErrorComponent } from '../validation/form-field-error/form-field-error.component';
-import { FormModelGroupDirective } from '../validation/form-model-group.directive';
-import { FormModelDirective } from '../validation/form-model.directive';
-import { FormDirective } from '../validation/form.directive';
+
+import {
+  FormDirective,
+  FormFieldErrorComponent,
+  FormModelDirective,
+  FormModelGroupDirective,
+} from '../form-validation';
 import {
   PasswordForm,
   PasswordFormType,

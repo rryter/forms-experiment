@@ -1,20 +1,22 @@
 import { CommonModule, NgForOf } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { ControlContainer, FormsModule, NgForm } from '@angular/forms';
-import { FormFieldErrorComponent } from '../validation/form-field-error/form-field-error.component';
-import { FormModelGroupDirective } from '../validation/form-model-group.directive';
-import { FormModelDirective } from '../validation/form-model.directive';
+import {
+  FormFieldErrorComponent,
+  FormModelDirective,
+  FormModelGroupDirective,
+} from '../form-validation';
 
 @Component({
   selector: 'fe-select',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
-    NgForOf,
     FormFieldErrorComponent,
     FormModelDirective,
     FormModelGroupDirective,
+    FormsModule,
+    NgForOf,
   ],
   viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
   template: `
